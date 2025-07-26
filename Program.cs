@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using HelpDesk.Data;
 using HelpDesk.Entities;
+using System.Reflection;
+using HelpDesk.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.S
 //Add MVC
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
