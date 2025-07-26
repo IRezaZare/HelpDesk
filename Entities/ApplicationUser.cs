@@ -11,6 +11,9 @@ namespace HelpDesk.Entities
         {
             return FirstName + " " + LastName;
         }
+        #region Relations
+        public List<Ticket> Tickets { get; set; }
+        #endregion
     }
 }
 public enum Gender
