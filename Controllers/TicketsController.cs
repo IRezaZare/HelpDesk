@@ -2,6 +2,7 @@
 using HelpDesk.Data;
 using HelpDesk.Entities;
 using HelpDesk.Extensions;
+using HelpDesk.Interfaces;
 using HelpDesk.ViewModels.TicketsDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +12,13 @@ using Microsoft.EntityFrameworkCore;
 namespace HelpDesk.Controllers
 {
     [Authorize]
-    public class TicketsController(ApplicationDbContext context , IMapper mapper) : Controller
+    public class TicketsController(IMapper mapper , ITicketRepository ticketRepository) : Controller
     {
 
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = context.Ticket.Include(t => t.CreatedBy);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await ticketRepository.GetAll());
         }
 
         // GET: Tickets/Details/5
@@ -29,9 +29,7 @@ namespace HelpDesk.Controllers
                 return NotFound();
             }
 
-            var ticket = await context.Ticket
-                .Include(t => t.CreatedBy)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var ticket = await ticketRepository.GetTicketById(id.Value);
             if (ticket == null)
             {
                 return NotFound();
@@ -62,8 +60,7 @@ namespace HelpDesk.Controllers
                 //ticket.CreatedById = User.GetId();
                 var entity = mapper.Map<Ticket>(ticket);
                 entity.CreatedById = User.GetId();
-                context.Add(entity);
-                await context.SaveChangesAsync();
+                await ticketRepository.Create(entity);
                 return RedirectToAction(nameof(Index));
             }
             //ViewData["CreatedById"] = new SelectList(context.Users, "Id", "Id", ticket.CreatedById);
@@ -78,12 +75,11 @@ namespace HelpDesk.Controllers
                 return NotFound();
             }
 
-            var ticket = await context.Ticket.FindAsync(id);
+            var ticket = await ticketRepository.GetTicketById(id.Value);
             if (ticket == null)
             {
                 return NotFound();
             }
-            ViewData["CreatedById"] = new SelectList(context.Users, "Id", "Id", ticket.CreatedById);
             return View(ticket);
         }
 
@@ -103,23 +99,21 @@ namespace HelpDesk.Controllers
             {
                 try
                 {
-                    context.Update(ticket);
-                    await context.SaveChangesAsync();
+                    await ticketRepository.Update(ticket);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TicketExists(ticket.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //if (!TicketExists(ticket.Id))
+                    //{
+                    //    return NotFound();
+                    //}
+                    //else
+                    //{
+                    //    throw;
+                    //}
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatedById"] = new SelectList(context.Users, "Id", "Id", ticket.CreatedById);
             return View(ticket);
         }
 
@@ -131,9 +125,7 @@ namespace HelpDesk.Controllers
                 return NotFound();
             }
 
-            var ticket = await context.Ticket
-                .Include(t => t.CreatedBy)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var ticket = await ticketRepository.GetTicketById(id.Value);
             if (ticket == null)
             {
                 return NotFound();
@@ -147,19 +139,18 @@ namespace HelpDesk.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var ticket = await context.Ticket.FindAsync(id);
+            var ticket = await ticketRepository.GetTicketById(id);
             if (ticket != null)
             {
-                context.Ticket.Remove(ticket);
+                await ticketRepository.Delete(ticket);
             }
 
-            await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TicketExists(int id)
-        {
-            return context.Ticket.Any(e => e.Id == id);
-        }
+        //private bool TicketExists(int id)
+        //{
+        //    return context.Ticket.Any(e => e.Id == id);
+        //}
     }
 }

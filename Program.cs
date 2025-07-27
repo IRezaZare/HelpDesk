@@ -4,6 +4,8 @@ using HelpDesk.Data;
 using HelpDesk.Entities;
 using System.Reflection;
 using HelpDesk.Mapping;
+using HelpDesk.Interfaces;
+using HelpDesk.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +26,15 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.S
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+//DI
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+
+
+
+
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
