@@ -36,7 +36,7 @@ namespace HelpDesk.Services
 
         public async Task<IReadOnlyList<Ticket>> GetAll()
         {
-            return await context.Ticket.ToListAsync();
+            return await context.Ticket.Include(t => t.CreatedBy).ToListAsync();
 
         }
 

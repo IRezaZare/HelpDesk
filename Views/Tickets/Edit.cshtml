@@ -1,75 +1,85 @@
-﻿@model HelpDesk.Entities.Ticket
+﻿@using HelpDesk.ViewModels.TicketsDto
+@model EditTicketDto
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Ticket";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-edit me-2"></i> Edit Ticket</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-<h4>Ticket</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label fw-semibold">
+                            <i class="fas fa-heading me-1 text-muted"></i> Title
+                        </label>
+                        <input asp-for="Title" class="form-control" placeholder="Enter ticket title" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Priority" class="form-label fw-semibold">
+                            <i class="fas fa-flag me-1 text-muted"></i> Priority
+                        </label>
+                        <input asp-for="Priority" class="form-control" placeholder="e.g., High, Medium, Low" />
+                        <span asp-validation-for="Priority" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Status" class="form-label fw-semibold">
+                            <i class="fas fa-check-circle me-1 text-muted"></i> Status
+                        </label>
+                        <select asp-for="Status" class="form-select">
+                            @foreach (var status in Enum.GetValues(typeof(TicketStatus)))
+                            {
+                                <option value="@status">@status</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-semibold">
+                            <i class="fas fa-align-left me-1 text-muted"></i> Description
+                        </label>
+                        <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter description"></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+                    <div class="form-switch form-check d-flex align-items-center gap-2 mb-3">
+                        <input class="form-check-input" asp-for="IsActive" role="switch" />
+                        <label class="form-check-label fw-semibold" asp-for="IsActive">
+                            @(Model.IsActive ? "فعال است" : "غیرفعال است")
+                        </label>
+                        <i class="bi @(Model.IsActive ? "bi-check-circle-fill text-success" : "bi-x-circle-fill text-danger") ms-2"></i>
+                    </div>
+
+                    
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Back to List
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-1"></i> Save Changes
+                        </button>
+                    </div>
+                    <input type="hidden" asp-for="Version" />
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Priority" class="control-label"></label>
-                <input asp-for="Priority" class="form-control" />
-                <span asp-validation-for="Priority" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedById" class="control-label"></label>
-                <select asp-for="CreatedById" class="form-control" asp-items="ViewBag.CreatedById"></select>
-                <span asp-validation-for="CreatedById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Version" class="control-label"></label>
-                <input asp-for="Version" class="form-control" />
-                <span asp-validation-for="Version" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
-                </label>
-            </div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

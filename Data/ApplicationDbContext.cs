@@ -18,8 +18,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .WithMany(x => x.Tickets)
             .HasForeignKey(x => x.CreatedById);
         builder.Entity<Ticket>().Property(x => x.Description).HasMaxLength(900);
+        builder.Entity<Ticket>().HasQueryFilter(x => !x.IsDeleted);
     }
+   
 
-public DbSet<HelpDesk.Entities.Ticket> Ticket { get; set; } = default!;
+    public DbSet<HelpDesk.Entities.Ticket> Ticket { get; set; } = default!;
 public DbSet<HelpDesk.Entities.ApplicationUser> ApplicationUsers { get; set; } = default!;
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace HelpDesk.Controllers
 {
     [Authorize]
-    public class TicketsController(IMapper mapper , ITicketRepository ticketRepository) : Controller
+    public class TicketsController(IMapper mapper, ITicketRepository ticketRepository) : Controller
     {
 
         // GET: Tickets
@@ -35,7 +35,7 @@ namespace HelpDesk.Controllers
                 return NotFound();
             }
 
-            return View(ticket);
+            return View(mapper.Map<TicketDetailDto>(ticket));
         }
 
         // GET: Tickets/Create
@@ -80,7 +80,7 @@ namespace HelpDesk.Controllers
             {
                 return NotFound();
             }
-            return View(ticket);
+            return View(mapper.Map<EditTicketDto>(ticket));
         }
 
         // POST: Tickets/Edit/5
@@ -88,33 +88,29 @@ namespace HelpDesk.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Title,Status,Priority,Description,CreatedById,CreatedOn,Version,IsActive,IsDeleted,Id")] Ticket ticket)
+        public async Task<IActionResult> Edit(int id, EditTicketDto model)
         {
-            if (id != ticket.Id)
+            if (id != model.Id) return NotFound();
+
+            if (!ModelState.IsValid) return View(model);
+
+            var entity = await ticketRepository.GetTicketById(model.Id); // entity
+            if (entity.Version == model.Version)
             {
-                return NotFound();
+                mapper.Map(model, entity); // model => entity : updated
+                await ticketRepository.Update(entity);
+                // await context.Ticket.ExecuteUpdateAsync(x =>
+                //     x.SetProperty(c => c.Priority, 2)
+                //         .SetProperty(c=>c.Status,TicketStatus.Close));
+            }
+            else
+            {
+                ModelState.AddModelError("", "شخص دیگری این بخش را ویرایش کرده است ");
+                return View(model);
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await ticketRepository.Update(ticket);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    //if (!TicketExists(ticket.Id))
-                    //{
-                    //    return NotFound();
-                    //}
-                    //else
-                    //{
-                    //    throw;
-                    //}
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(ticket);
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Tickets/Delete/5

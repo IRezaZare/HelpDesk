@@ -1,91 +1,78 @@
 ﻿@model IEnumerable<HelpDesk.Entities.Ticket>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Tickets";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var count = 1;
 }
 
-<h1>Ticket List</h1>
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0 text-primary">
+                <i class="fas fa-ticket-alt me-2"></i>Ticket List
+            </h2>
+            <a class="btn btn-success" asp-action="Create">
+                <i class="fas fa-plus-circle me-1"></i> Add New Ticket
+            </a>
+        </div>
 
-<p>
-    <a class="btn btn-success" asp-action="Create">Add New Ticket</a>
-</p>
-<table class="table table-responsive table-hover table-bordered">
-    <thead>
-        <tr>
-            <th>
-                #
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Priority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedOn)
-            </th>
-            @* <th>
-                @Html.DisplayNameFor(model => model.Version)
-            </th> *@
-            <th>
-                @Html.DisplayNameFor(model => model.IsActive)
-            </th>
-            @* <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
-            </th> *@
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@count</td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Priority)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedOn)
-                </td>
-                @*  <td>
-                @Html.DisplayFor(modelItem => item.Version)
-            </td> *@
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsActive)
-                </td>
-                @* <td>
-                @Html.DisplayFor(modelItem => item.IsDeleted)
-            </td> *@
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedBy.FirstName )
-                </td>
-                <td>
-                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-            count++;
-        }
-    </tbody>
-</table>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>@Html.DisplayNameFor(model => model.Title)</th>
+                        <th>@Html.DisplayNameFor(model => model.Status)</th>
+                        <th>@Html.DisplayNameFor(model => model.Priority)</th>
+                        <th>@Html.DisplayNameFor(model => model.Description)</th>
+                        <th>@Html.DisplayNameFor(model => model.CreatedOn)</th>
+                        <th>@Html.DisplayNameFor(model => model.IsActive)</th>
+                        <th>@Html.DisplayNameFor(model => model.CreatedBy)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@count</td>
+                            <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Priority)</td>
+                            <td class="text-truncate" style="max-width: 150px;">
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.CreatedOn)</td>
+                            <td>
+                                @if (item.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactive</span>
+                                }
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.CreatedBy.FirstName)</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        count++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
