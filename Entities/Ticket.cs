@@ -4,10 +4,7 @@ namespace HelpDesk.Entities
 {
     public class Ticket : AuditableEntity
     {
-        [Display(Name ="عنوان")]
         public string Title { get; set; }
-        [Display(Name ="وضعیت")]
-
         public TicketStatus Status { get; set; }
         public int Version { get; set; } 
         public bool IsActive { get; set; }
@@ -15,7 +12,10 @@ namespace HelpDesk.Entities
         public int Priority { get; set; }
         public string Description { get; set; }
 
-        
+        #region Relation
+        public List<Comment> Comments { get; set; }
+
+        #endregion
     }
 }
 public enum TicketStatus

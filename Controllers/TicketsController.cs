@@ -11,8 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HelpDesk.Controllers
 {
-    [Authorize]
-    public class TicketsController(IMapper mapper, ITicketRepository ticketRepository) : Controller
+    public class TicketsController(IMapper mapper, ITicketRepository ticketRepository) : AuthorizeBaseController
     {
 
         // GET: Tickets

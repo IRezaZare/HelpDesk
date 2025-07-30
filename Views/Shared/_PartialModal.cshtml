@@ -1,0 +1,33 @@
+﻿<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content shadow-lg rounded-4 border-0">
+            <div class="modal-header bg-dark text-white rounded-top-4">
+                <h5 class="modal-title font-bold" id="exampleModalLabel"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div id="modalBody" class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+            </div>
+
+            <div class="modal-footer bg-light rounded-bottom-4">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Colse
+                </button>
+                <button form="form" type="submit" id="btnSubmit" class="btn btn-success">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .modal.fade .modal-dialog {
+        transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    .modal.show .modal-dialog {
+        transform: scale(1);
+        opacity: 1;
+    }
+</style>

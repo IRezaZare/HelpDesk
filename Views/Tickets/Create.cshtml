@@ -1,7 +1,7 @@
 ﻿@model HelpDesk.ViewModels.TicketsDto.CreateTicketDto
 
 @{
-    ViewData["Title"] = "ثبت تیکت جدید";
+    ViewData["Title"] = "Create New Ticket";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,39 +10,39 @@
         <div class="col-md-8 col-lg-6">
             <div class="card shadow rounded-4 border-0">
                 <div class="card-header bg-primary text-white rounded-top-4">
-                    <h4 class="mb-0"><i class="bi bi-ticket-perforated-fill me-2"></i> ثبت تیکت جدید</h4>
+                    <h4 class="mb-0"><i class="bi bi-ticket-perforated-fill me-2"></i>Create New Ticket</h4>
                 </div>
                 <div class="card-body p-4">
                     <form asp-action="Create">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Title" class="form-control" placeholder="عنوان تیکت" />
-                            <label asp-for="Title"><i class="bi bi-type me-2"></i> عنوان</label>
+                            <input asp-for="Title" class="form-control" placeholder="Entet ticket title" />
+                            <label asp-for="Title"><i class="bi bi-type me-2"></i>Title</label>
                             <span asp-validation-for="Title" class="text-danger small"></span>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Priority" class="form-control" placeholder="اولویت تیکت" />
-                            <label asp-for="Priority"><i class="bi bi-exclamation-triangle-fill me-2"></i> اولویت</label>
+                            <input asp-for="Priority" class="form-control" placeholder="Enter ticket priority" />
+                            <label asp-for="Priority"><i class="bi bi-exclamation-triangle-fill me-2"></i> Priority</label>
                             <span asp-validation-for="Priority" class="text-danger small"></span>
                         </div>
 
                         <div class="form-floating mb-4">
-                            <textarea asp-for="Description" class="form-control" style="height: 150px;" placeholder="توضیحات"></textarea>
-                            <label asp-for="Description"><i class="bi bi-card-text me-2"></i> توضیحات</label>
+                            <textarea asp-for="Description" class="form-control" style="height: 150px;" placeholder="Enter ticket description"></textarea>
+                            <label asp-for="Description"><i class="bi bi-card-text me-2"></i> Description</label>
                             <span asp-validation-for="Description" class="text-danger small"></span>
                         </div>
 
                         <div class="d-grid">
                             <button type="submit" class="btn btn-success btn-lg shadow-sm">
-                                <i class="bi bi-send-check-fill me-1"></i> ارسال تیکت
+                                <i class="bi bi-send-check-fill me-1"></i> Create Ticket
                             </button>
                         </div>
                     </form>
                 </div>
                 <div class="card-footer text-end bg-light rounded-bottom-4">
-                    <a asp-action="Index" class="btn btn-link"><i class="bi bi-arrow-left"></i> بازگشت به لیست</a>
+                    <a asp-action="Index" class="btn btn-link"><i class="bi bi-arrow-left"></i> Back to List</a>
                 </div>
             </div>
         </div>

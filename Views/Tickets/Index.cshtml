@@ -25,6 +25,7 @@
                         <th>@Html.DisplayNameFor(model => model.Title)</th>
                         <th>@Html.DisplayNameFor(model => model.Status)</th>
                         <th>@Html.DisplayNameFor(model => model.Priority)</th>
+                        <th>Comments</th>
                         <th>@Html.DisplayNameFor(model => model.Description)</th>
                         <th>@Html.DisplayNameFor(model => model.CreatedOn)</th>
                         <th>@Html.DisplayNameFor(model => model.IsActive)</th>
@@ -40,6 +41,7 @@
                             <td>@Html.DisplayFor(modelItem => item.Title)</td>
                             <td>@Html.DisplayFor(modelItem => item.Status)</td>
                             <td>@Html.DisplayFor(modelItem => item.Priority)</td>
+                            <td>@item.Comments.Count</td>
                             <td class="text-truncate" style="max-width: 150px;">
                                 @Html.DisplayFor(modelItem => item.Description)
                             </td>
@@ -66,6 +68,9 @@
                                     <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">
                                         <i class="fas fa-trash"></i>
                                     </a>
+                                    <a onclick="CraeteComment(@item.Id)" class="btn btn-secondary">
+                                        <i class="fas fa-comments"></i>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
@@ -76,3 +81,19 @@
         </div>
     </div>
 </div>
+<partial name="_PartialModal" />
+@section Scripts{
+    <script>
+        function CraeteComment(ticketId) {
+            $.ajax({
+                url: `/Comments/Create/${ticketId}`,
+                type: 'GET',
+                data: {}
+            }).done(function(result) {
+                $('#exampleModal').modal('show');
+                $('#exampleModalLabel').html('Comments');
+                $('#modalBody').html(result);
+            });
+        }
+    </script>
+}
