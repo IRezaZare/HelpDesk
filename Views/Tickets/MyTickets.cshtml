@@ -18,7 +18,6 @@
         </div>
         @if (Model.Any())
         {
-
             <div class="table-responsive">
                 <table class="table table-bordered table-hover align-middle text-center">
                     <thead class="table-light">
@@ -81,17 +80,18 @@
                     </tbody>
                 </table>
             </div>
+
         }
         else
         {
             <div class="alert alert-warning" role="alert">
                 we don't have any data to show
-            </div>
+            </div>  
         }
     </div>
 </div>
 <partial name="_PartialModal" />
-@section Scripts{
+@section Scripts {
     <script>
         function CraeteComment(ticketId) {
             $.ajax({

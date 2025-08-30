@@ -1,26 +1,52 @@
-﻿using HelpDesk.Data;
+﻿using AutoMapper;
+using HelpDesk.Data;
 using HelpDesk.Entities;
 using HelpDesk.ViewModels.UsersDto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace HelpDesk.Controllers
 {
     public class UsersController(UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
-            ApplicationDbContext context)
+            ApplicationDbContext context , IMapper mapper)
         : AuthorizeBaseController
     {
 
 
         public async Task<IActionResult> Index()
         {
-            var usere = await context.Users.ToListAsync();
-            return View(usere);
+            var users = await context.Users.ToListAsync();
+            return View(users);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Roles()
+        {
+            var roles = await context.Roles.ToListAsync();
+            return View(roles);
+        }
+
+        [HttpGet]
+        public IActionResult CreateRole()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateRole(RoleViewModel model)
+        {
+            var role = new IdentityRole(model.Name);
+            var result = await roleManager.CreateAsync(role);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Roles");
+            }
+            return View(model);
+        }
+
         public IActionResult Create()
         {
             return View();
@@ -28,7 +54,19 @@ namespace HelpDesk.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserDto model)
         {
-            return RedirectToAction("Index");
+            var user = mapper.Map<ApplicationUser>(model);
+            var result = await userManager.CreateAsync(user , model.Password);
+            if(result.Succeeded) return RedirectToAction("Index");
+
+            if (result.Errors.Any())
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.Code, error.Description);
+                    return View(model);
+                }
+            }
+            return View(model);
         }
         
     }

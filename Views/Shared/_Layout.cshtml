@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using HelpDesk.Helpers
+
+<!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
@@ -9,114 +11,230 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
     <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <!-- Custom -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HelpDesk.styles.css" asp-append-version="true" />
 
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bs-body-bg);
-            color: var(--bs-body-color);
-        }
 
-        .navbar-brand i {
-            margin-right: 5px;
-        }
-
-        .navbar-dark-mode-toggle {
-            border: none;
-            background: none;
-            font-size: 1.2rem;
-            color: inherit;
-        }
-
-        footer {
-            padding: 1rem 0;
-            background-color: rgba(0,0,0,0.03);
-        }
-    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
-                    <i class="fas fa-headset"></i> HelpDesk
+    <!-- Sidebar -->
+
+    <nav id="sidebar" class="bg-dark text-white p-3">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="/" class="d-flex align-items-center text-white text-decoration-none">
+                <i class="fas fa-tools fa-lg me-2"></i>
+                <span class="fw-bold">HelpDesk</span>
+            </a>
+
+            <button class="btn btn-sm btn-outline-light d-lg-none" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        @if (User.Identity is { IsAuthenticated: true })
+        {
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a asp-controller="Users" asp-action="Index" class="nav-link text-white @(Url.IsActive("Users" , "Index"))">
+                        <i class="fas fa-users me-2"></i> Users
+                    </a>
+                </li>
+                <hr />
+                <li class="nav-item">
+                    <a asp-controller="Users" asp-action="Roles" class="nav-link text-white @(Url.IsActive("Users" , "Roles"))">
+                        <i class="fa-solid fa-shield"></i> User Roles
+                    </a>
+                </li>
+                <hr />
+                <li class="nav-item">
+                    <a asp-controller="Tickets" asp-action="Index" class="nav-link text-white @(Url.IsActive("Tickets" , "Index"))">
+                        <i class="fas fa-ticket-alt me-2"></i> Tickets
+                    </a>
+                </li>
+                <hr />
+
+                <li class="nav-item">
+                    <a asp-controller="Tickets" asp-action="MyTickets" class="nav-link text-white @(Url.IsActive("Tickets" , "MyTickets"))">
+                        <i class="fas fa-user-tag me-2"></i> My Tickets
+                    </a>
+                </li>
+            </ul>
+            <hr class="text-white-50">
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle px-3 py-2 rounded-3 shadow-sm"
+                   data-bs-toggle="dropdown" aria-expanded="false" style="background: linear-gradient(135deg, #0d6efd, #6610f2);">
+                    <i class="fa-solid fa-user-circle fa-lg me-2"></i>
+                    <span class="fw-semibold">@User.Identity?.Name</span>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
-                <div class="collapse navbar-collapse" id="navbarMain">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        @if (User.Identity is { IsAuthenticated: true })
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Tickets" asp-action="Index">Tickets</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Users" asp-action="Index">Users</a>
-                            </li>
-                        }
-                    </ul>
-
-                    <div class="d-flex align-items-center">
-                        <button id="darkModeToggle" class="navbar-dark-mode-toggle me-3" title="Toggle Dark Mode">
-                            <i class="fas fa-moon"></i>
-                        </button>
-                        <partial name="_LoginPartial" />
-                    </div>
-                </div>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark shadow-lg rounded-3 mt-2">
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" asp-area="Identity" asp-page="/Account/Manage/Index">
+                            <i class="fa-solid fa-id-card me-2 text-primary"></i> Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <i class="fa-solid fa-gear me-2 text-warning"></i> Settings
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index","Home")">
+                            <button type="submit" class="dropdown-item d-flex align-items-center text-danger">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i> Sign out
+                            </button>
+                        </form>
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </header>
 
-    <div class="container py-4">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        }
+        else
+        {
+            <ul class="nav flex-column mb-auto">
+                <li class="nav-item">
+                    <a asp-area="Identity" asp-page="/Account/login" class="nav-link text-white d-flex align-items-center px-3 py-2 rounded-3 shadow-sm" style="background-color: #0d6efd;">
+                        <i class="fas fa-sign-in-alt me-2"></i> Login
+                    </a>
+                </li>
+            </ul>
+            <hr />
+            <ul class="nav flex-column mb-auto">
+                <li class="nav-item">
+                    <a asp-area="Identity" asp-page="/Account/register" class="nav-link text-white d-flex align-items-center px-3 py-2 rounded-3 shadow-sm" style="background-color: #0d6efd;">
+                        <i class="fas fa-sign-in-alt me-2"></i> Register
+                    </a>
+                </li>
+            </ul>
+
+        }
+    </nav>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
+        <button class="btn btn-outline-light me-3 d-lg-none" id="openSidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
+            <i class="fas fa-headset"></i> HelpDesk
+        </a>
+        
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                </li>
+                @if (User.Identity is { IsAuthenticated: true })
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Tickets" asp-action="Index">Tickets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Users" asp-action="Index">Users</a>
+                    </li>
+                }
+            </ul>
+            <div class="d-flex align-items-center">
+                <button id="darkModeToggle" class="btn btn-outline-light me-2">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <partial name="_LoginPartial" />
+            </div>
+        </div>
+    </nav>
+
+    <!-- JS -->
+    <div class="d-flex align-items-center">
+        <button id="darkModeToggle" class="btn btn-outline-light me-2">
+            <i class="fas fa-moon"></i>
+        </button>
     </div>
 
-    <footer class="text-center text-muted border-top">
+    <script>
+        // دریافت المان دکمه
+        const darkModeToggle = document.getElementById("darkModeToggle");
+
+        // بررسی وضعیت دارک مود از localStorage (اگر قبلاً ذخیره شده باشد)
+        const currentTheme = localStorage.getItem("theme");
+
+        // تنظیم حالت اولیه بر اساس ذخیره شده در localStorage
+        if (currentTheme === "dark") {
+            document.body.classList.add("dark-mode");
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>'; // تغییر آیکن به خورشید
+        } else {
+            document.body.classList.remove("dark-mode");
+            darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>'; // آیکن به ماه برمی‌گردد
+        }
+
+        // اضافه کردن Event Listener به دکمه
+        darkModeToggle.addEventListener("click", function() {
+            // بررسی حالت فعلی
+            if (document.body.classList.contains("dark-mode")) {
+                // اگر دارک مود است، حذف کن
+                document.body.classList.remove("dark-mode");
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>'; // تغییر آیکن به ماه
+                localStorage.setItem("theme", "light"); // ذخیره وضعیت به صورت لایت مود
+            } else {
+                // اگر لایت مود است، دارک مود کن
+                document.body.classList.add("dark-mode");
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>'; // تغییر آیکن به خورشید
+                localStorage.setItem("theme", "dark"); // ذخیره وضعیت به صورت دارک مود
+            }
+        });
+    </script>
+
+    <style>
+        /* استایل‌های دارک مود */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .btn-outline-light {
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+
+        /* سایر استایل‌های مخصوص دارک مود */
+        body.dark-mode .navbar {
+            background-color: #333;
+        }
+
+        body.dark-mode .dropdown-menu {
+            background-color: #333;
+        }
+    </style>
+    <script>
+        const sidebar = document.getElementById("sidebar");
+        document.getElementById("openSidebar").addEventListener("click", () => {
+            sidebar.classList.add("show");
+        });
+        document.getElementById("closeSidebar").addEventListener("click", () => {
+            sidebar.classList.remove("show");
+        });
+    </script>
+
+    <main class="container py-4">
+        @RenderBody()
+    </main>
+
+    <footer class="text-center text-muted border-top py-3">
         <div class="container">
-            &copy; 2025 - HelpDesk - <a asp-controller="Home" asp-action="Privacy" class="text-decoration-none">Privacy</a>
+            &copy; Reza Zare - 2025 - HelpDesk - <a href="https://github.com/IRezaZare/HelpDesk" target="_blank" class="text-decoration-none">GitHub</a>
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-
-    <!-- Dark mode toggle script -->
-    <script>
-        const toggleBtn = document.getElementById("darkModeToggle");
-        const htmlTag = document.documentElement;
-        let currentTheme = localStorage.getItem("theme");
-
-        if (!currentTheme) {
-            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-            currentTheme = prefersDark ? "dark" : "light";
-            localStorage.setItem("theme", currentTheme);
-        }
-
-        htmlTag.setAttribute("data-bs-theme", currentTheme);
-
-        toggleBtn.addEventListener("click", () => {
-            currentTheme = htmlTag.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
-            htmlTag.setAttribute("data-bs-theme", currentTheme);
-            localStorage.setItem("theme", currentTheme);
-        });
-    </script>
 </body>
 </html>

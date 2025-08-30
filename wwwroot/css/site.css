@@ -1,4 +1,4 @@
-
+﻿
 html {
     font-size: 14px;
 }
@@ -30,3 +30,41 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+}
+
+#sidebar {
+    width: 260px;
+    transition: transform 0.3s ease;
+}
+/* موبایل: پیش‌فرض پنهان */
+@media (max-width: 991px) {
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        transform: translateX(-100%);
+        z-index: 1050;
+    }
+
+        #sidebar.show {
+            transform: translateX(0);
+        }
+}
+/* دسکتاپ: ثابت */
+@media (min-width: 992px) {
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        transform: none !important;
+    }
+
+    main {
+        margin-left: 260px;
+    }

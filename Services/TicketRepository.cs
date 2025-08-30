@@ -52,5 +52,14 @@ namespace HelpDesk.Services
         {
             await context.SaveChangesAsync();
         }
+
+        public async Task<List<Ticket>> MyTickets(string currentUserId)
+        {
+            return await context.Ticket
+                .Where(t => t.CreatedById == currentUserId)
+                .Include(t => t.CreatedBy)
+                .Include(t => t.Comments)
+                .ToListAsync();
+        }
     }
 }

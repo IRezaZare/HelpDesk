@@ -1,0 +1,35 @@
+﻿@model HelpDesk.ViewModels.UsersDto.RoleViewModel
+@{
+    ViewData["Title"] = "Create New Role";
+}
+<div class="container mt-5">
+    <div class="card bg-dark text-white shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4 py-3 px-4">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-person-plus-fill me-2"></i>@ViewData["Title"]</h4>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="CreateRole" method="post" id="createUserForm">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control bg-light-subtle text-dark border-0" placeholder="Enter a new role " />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-success rounded-pill px-4">
+                        <i class="bi bi-check-circle-fill me-1"></i> Create Role
+                    </button>
+                    <a asp-action="Roles" class="btn btn-outline-light rounded-pill px-4">
+                        <i class="bi bi-x-circle me-1"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

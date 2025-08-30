@@ -1,5 +1,74 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model HelpDesk.ViewModels.UsersDto.CreateUserDto
+<div class="container mt-5">
+    <div class="card bg-dark text-white shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4 py-3 px-4">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-person-plus-fill me-2"></i> Create New User</h4>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post" id="createUserForm">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control bg-light-subtle text-dark border-0" placeholder="Enter email" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="UserName" class="form-label"></label>
+                        <input asp-for="UserName" class="form-control bg-light-subtle text-dark border-0" placeholder="Enter username" />
+                        <span asp-validation-for="UserName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" type="password" class="form-control bg-light-subtle text-dark border-0" placeholder="Enter password" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="PhoneNumber" class="form-label"></label>
+                        <input asp-for="PhoneNumber" class="form-control bg-light-subtle text-dark border-0" placeholder="Enter phone number" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="FirstName" class="form-label"></label>
+                        <input asp-for="FirstName" class="form-control bg-light-subtle text-dark border-0" placeholder="Enter first name" />
+                        <span asp-validation-for="FirstName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="LastName" class="form-label"></label>
+                        <input asp-for="LastName" class="form-control bg-light-subtle text-dark border-0" placeholder="Enter last name" />
+                        <span asp-validation-for="LastName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Gender" class="form-label"></label>
+                        <select asp-for="Gender" class="form-select bg-light-subtle text-dark border-0" required>
+                            <option value="">Select Gender</option>
+                            @foreach (var gender in Enum.GetValues(typeof(Gender)))
+                            {
+                                <option value="@gender">@gender</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Gender" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-success rounded-pill px-4">
+                        <i class="bi bi-check-circle-fill me-1"></i> Create
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-light rounded-pill px-4">
+                        <i class="bi bi-x-circle me-1"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

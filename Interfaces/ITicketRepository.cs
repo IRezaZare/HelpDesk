@@ -9,6 +9,7 @@ namespace HelpDesk.Interfaces
         Task<bool> Delete(Ticket ticket);
         Task<bool> Delete(int Id);
         Task<IReadOnlyList<Ticket>> GetAll();
+        Task<List<Ticket>> MyTickets(string currentUserId);
         Task Save();
         Task<Ticket> GetTicketById(int Id);
     }
