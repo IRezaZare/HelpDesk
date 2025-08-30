@@ -1,0 +1,87 @@
+﻿@model IEnumerable<HelpDesk.Entities.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Users";
+    var count = 1;
+}
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0 text-primary">
+                <i class="fas fa-user me-2"></i>Users List
+            </h2>
+            <a class="btn btn-success" asp-action="Create">
+                <i class="fas fa-plus-circle me-1"></i> Add New User
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>@Html.DisplayNameFor(model => model.Email)</th>
+                        <th>@Html.DisplayNameFor(model => model.EmailConfirmed)</th>
+                        <th>@Html.DisplayNameFor(model => model.FirstName)</th>
+                        <th>@Html.DisplayNameFor(model => model.LastName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Gender)</th>
+                        <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
+                        <th>@Html.DisplayNameFor(model => model.UserName)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@count</td>
+                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                            <td>@Html.DisplayFor(modelItem => item.EmailConfirmed)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
+                            <td class="text-truncate" style="max-width: 150px;">
+                                @Html.DisplayFor(modelItem => item.LastName)
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.Gender)</td>
+                            <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                            <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                    <a onclick="CraeteComment(@item.Id)" class="btn btn-secondary">
+                                        <i class="fas fa-comments"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        count++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<partial name="_PartialModal" />
+@section Scripts {
+    <script>
+        function CraeteComment(ticketId) {
+            $.ajax({
+                url: `/Comments/Create/${ticketId}`,
+                type: 'GET',
+                data: {}
+            }).done(function(result) {
+                $('#exampleModal').modal('show');
+                $('#exampleModalLabel').html('Comments');
+                $('#modalBody').html(result);
+            });
+        }
+    </script>
+}
