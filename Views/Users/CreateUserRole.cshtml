@@ -1,0 +1,50 @@
+﻿@model HelpDesk.ViewModels.UsersDto.CreateUserRoleViewModel
+
+@{
+    ViewData["Title"] = "Create User Role";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-header bg-primary text-white rounded-top-4">
+                    <h4 class="mb-0"><i class="bi bi-ticket-perforated-fill me-2"></i>@ViewData["Title"]</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="CreateUserRole">
+                        <input type="hidden" asp-for="UserId" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="form-floating mb-3">
+                            <label asp-for="UserName"><i class="bi bi-type me-2"></i></label>
+                            <input asp-for="UserName" readonly disabled class="form-control" />
+                            <span asp-validation-for="UserName" class="text-danger small"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <label asp-for="RoleId"><i class="bi bi-type me-2"></i></label>
+                            <select class="form-select" asp-for="RoleId" asp-items="@(ViewData["Roles"] as SelectList)">
+                                <option value="value">text</option>
+                            </select>
+                            <span asp-validation-for="RoleId" class="text-danger small"></span>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg shadow-sm">
+                                <i class="bi bi-send-check-fill me-1"></i> Create New Role
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-end bg-light rounded-bottom-4">
+                    <a asp-action="Index" class="btn btn-link"><i class="bi bi-arrow-left"></i> Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

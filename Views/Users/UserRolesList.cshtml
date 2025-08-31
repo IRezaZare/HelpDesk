@@ -1,0 +1,78 @@
+﻿@model IEnumerable<HelpDesk.ViewModels.UsersDto.UserRolesViewModel>
+
+@{
+    ViewData["Title"] = "User Roles";
+    var count = 1;
+}
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0 text-primary">
+                <i class="fas fa-user me-2"></i>Users Roles
+            </h2>
+        </div>
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>@Html.DisplayNameFor(model => model.UserName)</th>
+                            <th>@Html.DisplayNameFor(model => model.RoleName)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@count</td>
+                                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.RoleName)</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        @* <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">
+                                            <i class="fas fa-info-circle"></i>
+                                        </a>*@
+                                        <a class="btn btn-danger" asp-action="DeleteUserRole" asp-route-roleId="@item.RoleId" asp-route-userId="@item.UserId">
+                                            <i class="fas fa-trash"></i>
+                                        </a> 
+                                    </div>
+                                </td>
+                            </tr>
+                            count++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        }
+        else
+        {
+            <div class="alert alert-warning" role="alert">
+                we don't have any data to show
+            </div>
+        }
+    </div>
+</div>
+<partial name="_PartialModal" />
+@section Scripts {
+    <script>
+        function CraeteComment(ticketId) {
+            $.ajax({
+                url: `/Comments/Create/${ticketId}`,
+                type: 'GET',
+                data: {}
+            }).done(function(result) {
+                $('#exampleModal').modal('show');
+                $('#exampleModalLabel').html('Comments');
+                $('#modalBody').html(result);
+            });
+        }
+    </script>
+}
