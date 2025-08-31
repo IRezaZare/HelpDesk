@@ -145,7 +145,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## 🧑‍💻 Author
 
-* **Reza Zare**
+* **Reza Zare** * **Ali Chavoshi**
 
 ---
 
@@ -265,4 +265,4 @@ dotnet publish -c Release -o ./publish
 
 ## 🧑‍💻 نویسنده
 
-* **رضا زارع**
+* **رضا زارع** * **علی چاوشی**
