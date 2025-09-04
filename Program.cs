@@ -5,6 +5,7 @@ using HelpDesk.Interfaces;
 using HelpDesk.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.FeatureManagement;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 //Connect to the Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString , opt =>
+    {
+        opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+    }));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 //Add Identity to the project
 
@@ -53,6 +57,7 @@ builder.Services.Configure<IpRateLimitOptions>(options =>
 builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>(); //DI Rate Limit
 
+builder.Services.AddFeatureManagement();
 
 var app = builder.Build();
 
