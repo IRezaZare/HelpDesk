@@ -1,6 +1,7 @@
 ﻿using HelpDesk.Data;
 using HelpDesk.Entities;
 using HelpDesk.Interfaces;
+using HelpDesk.ViewModels.TicketsDto;
 using Microsoft.EntityFrameworkCore;
 
 namespace HelpDesk.Services
@@ -59,6 +60,20 @@ namespace HelpDesk.Services
                 .Where(t => t.CreatedById == currentUserId)
                 .Include(t => t.CreatedBy)
                 .Include(t => t.Comments)
+                .ToListAsync();
+        }
+
+        public async Task<List<TicketHstory>> GetTemporalHistory(int Id)
+        {
+            return await context.Ticket
+                .TemporalAll()
+                .Where(t => t.Id == Id)
+                .Select(t => new TicketHstory
+                {
+                    Form = EF.Property<DateTime>(t,"From").ToLocalTime(),
+                    To = EF.Property<DateTime>(t,"To").ToLocalTime(),
+                    Title = t.Title
+                })
                 .ToListAsync();
         }
     }

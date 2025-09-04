@@ -29,6 +29,10 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
+builder.Services.AddMemoryCache(options =>
+{
+    
+});
 
 
 

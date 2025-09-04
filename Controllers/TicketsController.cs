@@ -1,23 +1,34 @@
 ﻿using AutoMapper;
-using HelpDesk.Data;
 using HelpDesk.Entities;
 using HelpDesk.Extensions;
 using HelpDesk.Interfaces;
 using HelpDesk.ViewModels.TicketsDto;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace HelpDesk.Controllers
 {
-    public class TicketsController(IMapper mapper, ITicketRepository ticketRepository) : AuthorizeBaseController
+    public class TicketsController(IMapper mapper, ITicketRepository ticketRepository, IMemoryCache cache) : AuthorizeBaseController
     {
+        private const string _Key = "Product";
 
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            return View(await ticketRepository.GetAll());
+            var history = await ticketRepository.GetTemporalHistory();
+            IReadOnlyList<Ticket> tickets;
+            if (!cache.TryGetValue(_Key, out tickets)) return View(tickets);
+
+            tickets = await ticketRepository.GetAll();
+            if (tickets is { Count: > 0 })
+            {
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(10))
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+                cache.Set(_Key, tickets, cacheEntryOptions);
+            }
+            return View(tickets);
+
         }
         public async Task<IActionResult> MyTickets()
         {

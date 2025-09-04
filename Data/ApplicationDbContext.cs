@@ -20,6 +20,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasForeignKey(x => x.CreatedById);
         builder.Entity<Ticket>().Property(x => x.Description).HasMaxLength(900);
         builder.Entity<Ticket>().HasQueryFilter(x => !x.IsDeleted);
+        builder.Entity<Ticket>()
+            .ToTable(c =>
+            {
+                c.IsTemporal(o =>
+                {
+                    o.UseHistoryTable("TicketHistory");
+                    o.HasPeriodStart("From");
+                    o.HasPeriodEnd("To");
+                });
+            });
         //comments
         builder.Entity<Comment>()
             .HasOne(x => x.CreatedBy)

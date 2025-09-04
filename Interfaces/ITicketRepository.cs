@@ -1,4 +1,5 @@
 ﻿using HelpDesk.Entities;
+using HelpDesk.ViewModels.TicketsDto;
 
 namespace HelpDesk.Interfaces
 {
@@ -12,5 +13,6 @@ namespace HelpDesk.Interfaces
         Task<List<Ticket>> MyTickets(string currentUserId);
         Task Save();
         Task<Ticket> GetTicketById(int Id);
+        Task<List<TicketHstory>> GetTemporalHistory(int Id);
     }
 }
