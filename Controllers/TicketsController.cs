@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace HelpDesk.Controllers
 {
+
     public class TicketsController(IMapper mapper, ITicketRepository ticketRepository, IMemoryCache cache) : AuthorizeBaseController
     {
         private const string _Key = "Product";
@@ -15,7 +16,7 @@ namespace HelpDesk.Controllers
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            var history = await ticketRepository.GetTemporalHistory();
+            var history = await ticketRepository.GetTemporalHistory(3);
             IReadOnlyList<Ticket> tickets;
             if (!cache.TryGetValue(_Key, out tickets)) return View(tickets);
 

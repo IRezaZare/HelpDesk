@@ -1,3 +1,4 @@
+﻿using AspNetCoreRateLimit;
 using HelpDesk.Data;
 using HelpDesk.Entities;
 using HelpDesk.Interfaces;
@@ -36,6 +37,22 @@ builder.Services.AddMemoryCache(options =>
 
 
 
+//Rate Limit
+builder.Services.Configure<IpRateLimitOptions>(options =>
+{
+    options.GeneralRules =
+    [
+        new RateLimitRule
+        {
+            Endpoint = "*", 
+            Limit = 5,
+            Period = "10s" 
+        }
+    ];
+});
+builder.Services.AddInMemoryRateLimiting();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>(); //DI Rate Limit
+
 
 var app = builder.Build();
 
@@ -52,6 +69,7 @@ else
     app.UseHsts();
 }
 
+app.UseIpRateLimiting();
 app.UseHttpsRedirection();
 app.UseRouting();
 
